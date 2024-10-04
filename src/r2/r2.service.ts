@@ -2,7 +2,9 @@ import * as AWS from 'aws-sdk';
 import * as stream from 'stream';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as mime from 'mime-types'; // Asegúrate de instalar mime-types: npm install mime-types
+import * as mime from 'mime-types';
+import axios from 'axios';
+import { UploadResponseDto } from './upload-response.dto';
 
 @Injectable()
 export class R2Service {
@@ -17,14 +19,13 @@ export class R2Service {
     });
   }
 
-  async uploadFile(fileString: string, filename: string): Promise<string> {
+  async uploadFile(fileString: string, filename: string): Promise<UploadResponseDto> {
     const bucketName = this.configService.get<string>('R2_BUCKET_NAME');
     const r2Url = this.configService.get<string>('R2_URL');
-    const fileBuffer = Buffer.from(fileString, 'base64'); // Convertir el string a buffer
+    const fileBuffer = Buffer.from(fileString, 'base64');
     const pass = new stream.PassThrough();
     pass.end(fileBuffer);
 
-    // Determinar el ContentType basado en la extensión del archivo
     const contentType = mime.lookup(filename) || 'application/octet-stream';
 
     try {
@@ -34,7 +35,21 @@ export class R2Service {
         Body: pass,
         ContentType: contentType,
       }).promise();
-      return `${r2Url}/${bucketName}/${filename}`;
+      const imageUrl = `${r2Url}/${bucketName}/${filename}`;
+
+      console.log('imageUrl', imageUrl);
+
+      const response = await axios.post('http://127.0.0.1:8000/openai/get_pet_features/', {
+        prompt: imageUrl,
+        max_tokens: 300,
+      });
+
+      const uploadResponse: UploadResponseDto = {
+        ...response.data,
+        imageUrl: imageUrl,
+      };
+
+      return uploadResponse;
     } catch (error) {
       console.error('Error uploading file:', error);
       throw new Error('Error uploading file');

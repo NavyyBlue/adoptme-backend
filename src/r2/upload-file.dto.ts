@@ -8,13 +8,13 @@ export class UploadFileDto {
   })
   @IsNotEmpty()
   @IsString()
-  readonly filename: string; // El nombre del archivo que se va a guardar
+  readonly filename: string;
 
   @ApiProperty({
     description: 'Los datos del archivo en forma de bytes',
     type: 'string',
-    format: 'binary', // Indica que se espera un archivo binario
+    format: 'binary',
   })
   @IsNotEmpty()
-  readonly file: string; // Los datos del archivo (en forma de buffer)
+  readonly file: string; 
 }
