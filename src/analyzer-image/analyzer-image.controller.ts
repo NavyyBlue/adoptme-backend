@@ -9,7 +9,7 @@ import { ComparePetsResponseDto } from './dto/compare-pets/compare-pets-response
 export class AnalyzerImageController {
   constructor(private readonly analyzerImageService: AnalyzerImageService) {}
 
-  @Post('get-peatures-pet')
+  @Post('get-features-pet')
   async getFeaturesPet(@Body() uploadFileDto: UploadFileDto): Promise<GetFeaturesPetDto> {
     const { filename, file } = uploadFileDto;
     return this.analyzerImageService.analyzeImage(file, filename);
