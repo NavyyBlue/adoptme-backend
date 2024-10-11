@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as mime from 'mime-types';
 import axios from 'axios';
-import { UploadResponseDto } from './upload-response.dto';
+import { UploadResponseDto } from './dto/upload-file/upload-response.dto';
 
 @Injectable()
 export class R2Service {
@@ -38,14 +38,7 @@ export class R2Service {
       const imageUrl = `${r2Url}/${bucketName}/${filename}`;
 
       console.log('imageUrl', imageUrl);
-
-      const response = await axios.post('http://127.0.0.1:8000/openai/get_pet_features/', {
-        prompt: imageUrl,
-        max_tokens: 300,
-      });
-
       const uploadResponse: UploadResponseDto = {
-        ...response.data,
         imageUrl: imageUrl,
       };
 
