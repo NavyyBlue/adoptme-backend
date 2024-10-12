@@ -46,6 +46,7 @@ export class AnalyzerImageService {
     const getFeaturesPetDto: GetFeaturesPetDto = {
       status: petFeatures.status,
       data: petData,
+      imageUrl: uploadResponse.imageUrl,
     };
 
     return getFeaturesPetDto;

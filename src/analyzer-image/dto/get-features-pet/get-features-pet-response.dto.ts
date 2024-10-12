@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { PetDataDto } from '../pet-data/pet-data.dto'; // Importa el DTO PetDataDto
+import { IsNotEmpty, IsNumber, IsString, IsObject } from 'class-validator';
+import { PetDataDto } from '../pet-data/pet-data.dto';
 
 export class GetFeaturesPetDto {
   @ApiProperty({
@@ -13,7 +13,17 @@ export class GetFeaturesPetDto {
 
   @ApiProperty({
     description: 'The data of the pet features',
+    type: PetDataDto,
   })
   @IsNotEmpty()
-  readonly data: PetDataDto; // Usa PetDataDto como tipo para data
+  @IsObject()
+  readonly data: PetDataDto;
+
+  @ApiProperty({
+    description: 'The URL of the image',
+    example: 'http://example.com/image.jpg',
+  })
+  @IsNotEmpty()
+  @IsString()
+  readonly imageUrl: string;
 }
