@@ -1,9 +1,9 @@
-import { Controller, Post, Body, HttpStatus, HttpException } from '@nestjs/common';
+import { UploadFileDto } from '@modules/r2/dto/upload-file/upload-file.dto';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AnalyzerImageService } from './analyzer-image.service';
-import { UploadFileDto } from '../r2/dto/upload-file/upload-file.dto';
-import { GetFeaturesPetDto } from '../analyzer-image/dto/get-features-pet/get-features-pet-response.dto';
 import { CompareImagesDto } from './dto/compare-pets/compare-images.dto';
 import { ComparePetsResponseDto } from './dto/compare-pets/compare-pets-response.dto';
+import { GetFeaturesPetDto } from './dto/get-features-pet/get-features-pet-response.dto';
 
 @Controller('analyzer-image')
 export class AnalyzerImageController {

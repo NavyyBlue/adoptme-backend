@@ -1,9 +1,8 @@
-import * as AWS from 'aws-sdk';
-import * as stream from 'stream';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import * as AWS from 'aws-sdk';
 import * as mime from 'mime-types';
-import axios from 'axios';
+import * as stream from 'stream';
 import { UploadResponseDto } from './dto/upload-file/upload-response.dto';
 
 @Injectable()

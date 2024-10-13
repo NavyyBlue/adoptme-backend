@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AnalyzerImageModule } from './analyzer-image/analyzer-image.module';
-import { R2Module } from './r2/r2.module';
 import { FirebaseModule } from './data/firebase/firebase.module';
 import { VetsModule } from './modules/vets/vets.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
+import { AnalyzerImageModule } from './modules/analyzer-image/analyzer-image.module';
+import { R2Module } from './modules/r2/r2.module';
 
 @Module({
   imports: [

@@ -1,10 +1,10 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
-import { R2Service } from '../r2/r2.service';
-import { GetFeaturesPetDto } from '../analyzer-image/dto/get-features-pet/get-features-pet-response.dto';
-import { PetDataDto } from '../analyzer-image/dto/pet-data/pet-data.dto';
-import { ComparePetsResponseDto } from '../analyzer-image/dto/compare-pets/compare-pets-response.dto';
+import { R2Service } from '@modules/r2/r2.service';
+import { GetFeaturesPetDto } from './dto/get-features-pet/get-features-pet-response.dto';
+import { PetDataDto } from './dto/pet-data/pet-data.dto';
+import { ComparePetsResponseDto } from './dto/compare-pets/compare-pets-response.dto';
 
 
 @Injectable()
