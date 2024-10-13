@@ -1,17 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { FirebaseRepository } from 'src/data/firebase/firebase.repository';
+import { FirebaseRepository } from '@data/firebase/firebase.repository';
+import { Pagination } from '@common/pagination';
+import { COLLECTIONS } from 'src/constants/collection.constants';
+import { Vet } from './vet.schema';
+import { PaginationDto } from '@common/pagination.dto';
+import { VetResponseDto } from './dto/vet.response.dto';
 
 @Injectable()
 export class VetsService {
-  private readonly collection = 'vets';
+  private readonly collection = COLLECTIONS.VETS;
 
-  constructor(private firebaseRepository: FirebaseRepository<any>) {}
+  constructor(private firebaseRepository: FirebaseRepository<Vet>) {}
 
-  async getAllVets(page: number, limit: number, baseUrl: string) {
-    const pageNumber = Number(page);
-    const limitNumber = Number(limit);
-
-    const offset = (pageNumber - 1) * limitNumber;
+  async getAllVets(
+    page: number,
+    limit: number,
+    baseUrl: string,
+  ): Promise<PaginationDto<VetResponseDto>> {
     const snapshot = await this.firebaseRepository.getAll(this.collection);
     const vetsArray = Object.values(snapshot || {});
 
@@ -21,36 +26,16 @@ export class VetsService {
       return rest;
     });
 
-    const totalItems = filteredVetsArray.length;
-    const totalPages = Math.ceil(totalItems / limitNumber);
-    const paginatedItems = filteredVetsArray.slice(
-      offset,
-      offset + limitNumber,
-    );
-
-    // Calcular el número de la siguiente página
-    const nextPage = pageNumber + 1;
-    const prevPage = pageNumber - 1;
-
-    // Generar las URLs para la siguiente y la anterior página
-    const nextPageUrl =
-      offset + limitNumber < totalItems
-        ? `${baseUrl}?page=${nextPage}&limit=${limit}`
-        : null;
-    const prevPageUrl =
-      pageNumber > 1 ? `${baseUrl}?page=${prevPage}&limit=${limit}` : null;
-
-    return {
-      count: totalItems,
-      totalPages: totalPages,
-      data: paginatedItems,
-      nextPageUrl,
-      prevPageUrl,
-    };
+    const pagination = new Pagination(filteredVetsArray, page, limit, baseUrl);
+    return pagination.paginate();
   }
 
-  async getVetById(id: string) {
-    return this.firebaseRepository.getById(this.collection, id);
+  async getVetById(id: string): Promise<VetResponseDto> {
+    const snapshot = await this.firebaseRepository.getById(this.collection, id);
+    const filteredVet = snapshot.detailed_reviews
+      ? { ...snapshot, detailed_reviews: undefined }
+      : snapshot;
+    return filteredVet;
   }
 
   async createVet(id: string, vetData: any) {
@@ -65,45 +50,28 @@ export class VetsService {
     return this.firebaseRepository.delete(this.collection, id);
   }
 
-  async getDetailedReviews(
-    vetId: string,
-    page: number,
-    limit: number,
-    baseUrl: string,
-  ) {
-    const pageNumber = Number(page);
-    const limitNumber = Number(limit);
+  async updateVetGeneralRating(vetId: string, rating: number) {
+    try {
+      rating = Vet.validateAndRoundRating(rating);
 
-    const offset = (pageNumber - 1) * limitNumber;
-    const snapshot = await this.firebaseRepository.getSubCollection(
-      this.collection,
-      vetId,
-      'detailed_reviews',
-    );
-    const detailedReviews = Object.values(snapshot || []);
+      const snapshot = await this.firebaseRepository.getById(
+        this.collection,
+        vetId,
+      );
+      const vet = snapshot;
 
-    const totalItems = detailedReviews.length;
-    const totalPages = Math.ceil(totalItems / limitNumber);
-    const paginatedItems = detailedReviews.slice(offset, offset + limitNumber);
+      const reviewsCount = vet.reviews + 1;
+      const totalRating = (vet.rating * vet.reviews + rating) / reviewsCount;
 
-    // Calcular el número de la siguiente página
-    const nextPage = pageNumber + 1;
-    const prevPage = pageNumber - 1;
+      const updatedVet = {
+        ...vet,
+        rating: parseFloat(totalRating.toFixed(1)),
+        reviews: reviewsCount,
+      };
 
-    // Generar las URLs para la siguiente y la anterior página
-    const nextPageUrl =
-      offset + limitNumber < totalItems
-        ? `${baseUrl}?page=${nextPage}&limit=${limit}`
-        : null;
-    const prevPageUrl =
-      pageNumber > 1 ? `${baseUrl}?page=${prevPage}&limit=${limit}` : null;
-
-    return {
-      count: totalItems,
-      totalPages: totalPages,
-      data: paginatedItems,
-      nextPageUrl,
-      prevPageUrl,
-    };
+      await this.firebaseRepository.update(this.collection, vetId, updatedVet);
+    } catch (error) {
+      throw new Error('Error al actualizar la veterinaria');
+    }
   }
 }

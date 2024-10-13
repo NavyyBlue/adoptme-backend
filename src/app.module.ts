@@ -6,6 +6,7 @@ import { AnalyzerImageModule } from './analyzer-image/analyzer-image.module';
 import { R2Module } from './r2/r2.module';
 import { FirebaseModule } from './data/firebase/firebase.module';
 import { VetsModule } from './modules/vets/vets.module';
+import { ReviewsModule } from './modules/reviews/reviews.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { VetsModule } from './modules/vets/vets.module';
     R2Module,
     FirebaseModule,
     VetsModule,
+    ReviewsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

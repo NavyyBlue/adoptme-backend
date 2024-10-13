@@ -39,8 +39,25 @@ export class FirebaseRepository<T> {
     await this.getRef(collection).child(id).remove();
   }
 
-  async getSubCollection(parentCollection: string, parentId: string, subCollection: string): Promise<T[]> {
-    const snapshot = await this.getRef(`${parentCollection}/${parentId}/${subCollection}`).once('value');
+  async getSubCollection(
+    parentCollection: string,
+    parentId: string,
+    subCollection: string,
+  ): Promise<T[]> {
+    const snapshot = await this.getRef(
+      `${parentCollection}/${parentId}/${subCollection}`,
+    ).once('value');
     return snapshot.val();
+  }
+
+  async createSubCollection(
+    parentCollection: string,
+    parentId: string,
+    subCollection: string,
+    data: T,
+  ): Promise<void> {
+    await this.getRef(`${parentCollection}/${parentId}/${subCollection}`).push(
+      data,
+    );
   }
 }

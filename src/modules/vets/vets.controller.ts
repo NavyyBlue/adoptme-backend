@@ -10,8 +10,9 @@ import {
   Req,
 } from '@nestjs/common';
 import { Request } from 'express';
+import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { VetsService } from './vets.service';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { VetPaginationResponseDto } from './dto/vet.pagination.response.dto';
 
 @ApiTags('vets')
 @Controller('vets')
@@ -21,6 +22,12 @@ export class VetsController {
   @Get()
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de reseñas de la veterinaria',
+    type: VetPaginationResponseDto,
+    isArray: true,
+  })
   async getAllVets(
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
@@ -49,19 +56,6 @@ export class VetsController {
   @Delete(':id')
   async deleteVet(@Param('id') id: string) {
     return this.vetsService.deleteVet(id);
-  }
-
-  @Get(':id/reviews')
-  @ApiQuery({ name: 'page', required: false, type: Number })
-  @ApiQuery({ name: 'limit', required: false, type: Number })
-  async getDetailedReviews(
-    @Param('id') vetId: string,
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
-    @Req() request: Request,
-  ) {
-    const baseUrl = `${request.protocol}://${request.get('host')}${request.path}`;
-    return this.vetsService.getDetailedReviews(vetId, page, limit, baseUrl);
   }
 
   private generateId(): string {

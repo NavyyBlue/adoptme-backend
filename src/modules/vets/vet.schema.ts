@@ -1,43 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-
-class SentimentScore {
-  @ApiProperty()
-  Mixed: number;
-
-  @ApiProperty()
-  Negative: number;
-
-  @ApiProperty()
-  Neutral: number;
-
-  @ApiProperty()
-  Positive: number;
-}
-
-class Sentiment {
-  @ApiProperty()
-  Sentiment: string;
-
-  @ApiProperty({ type: SentimentScore })
-  SentimentScore: SentimentScore;
-}
-
-class Review {
-  @ApiProperty()
-  review_id: string;
-
-  @ApiProperty()
-  rating: number;
-
-  @ApiProperty()
-  review_translated_text: string;
-
-  @ApiProperty()
-  published_at_date: string;
-
-  @ApiProperty({ type: Sentiment })
-  sentiment: Sentiment;
-}
+import { Review } from '@modules/reviews/reviews.schema';
 
 export class Vet {
   @ApiProperty()
@@ -63,4 +25,11 @@ export class Vet {
 
   @ApiProperty({ type: [Review] })
   detailed_reviews: Review[];
+
+  static validateAndRoundRating(rating: number): number {
+    if (rating < 1 || rating > 5) {
+      throw new Error('El rating debe estar entre 1 y 5');
+    }
+    return parseFloat(rating.toFixed(1));
+  }
 }
