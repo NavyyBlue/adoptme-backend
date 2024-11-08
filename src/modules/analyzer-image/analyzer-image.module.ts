@@ -8,5 +8,6 @@ import { R2Module } from '@modules/r2/r2.module';
   imports: [ConfigModule, R2Module],
   providers: [AnalyzerImageService],
   controllers: [AnalyzerImageController],
+  exports: [AnalyzerImageService]
 })
 export class AnalyzerImageModule {}

@@ -7,6 +7,7 @@ import { VetsModule } from './modules/vets/vets.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
 import { AnalyzerImageModule } from './modules/analyzer-image/analyzer-image.module';
 import { R2Module } from './modules/r2/r2.module';
+import { PetsModule } from './modules/pets/pets.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { R2Module } from './modules/r2/r2.module';
     FirebaseModule,
     VetsModule,
     ReviewsModule,
+    PetsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
