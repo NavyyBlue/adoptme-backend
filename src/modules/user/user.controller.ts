@@ -7,11 +7,5 @@ import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  @Post('/signup')
-  @ApiOperation({ summary: 'Sign up a new user' })
-  @ApiBody({ type: UserDto })
-  signup(@Body() userRequest: UserDto) {
-    return this.userService.createUser(userRequest);
-  }
+  
 }
