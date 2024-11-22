@@ -60,4 +60,59 @@ export class FirebaseRepository<T> {
       data,
     );
   }
+
+  async createSubCollectionWithoutId(
+    parentCollection: string,
+    parentId: string,
+    subCollection: string,
+    data: T,
+  ): Promise<void> {
+    await this.getRef(`${parentCollection}/${parentId}/${subCollection}`).set(
+      data,
+    );
+  }
+
+  async removeSubCollection(
+    parentCollection: string,
+    parentId: string,
+    subCollection: string,
+    subCollectionId: string,
+  ): Promise<void> {
+    await this.getRef(
+      `${parentCollection}/${parentId}/${subCollection}/${subCollectionId}`,
+    ).remove();
+  }
+
+  async removeEntireSubCollection(
+    parentCollection: string,
+    parentId: string,
+    subCollection: string,
+  ): Promise<void> {
+    await this.getRef(
+      `${parentCollection}/${parentId}/${subCollection}`,
+    ).remove();
+  }
+
+  async updateSubCollection(
+    parentCollection: string,
+    parentId: string,
+    subCollection: string,
+    subCollectionId: string,
+    data: Partial<T>,
+  ): Promise<void> {
+    await this.getRef(
+      `${parentCollection}/${parentId}/${subCollection}/${subCollectionId}`,
+    ).update(data);
+  }
+
+  async updateEntireSubCollection(
+    parentCollection: string,
+    parentId: string,
+    subCollection: string,
+    data: Partial<T>,
+  ): Promise<void> {
+    await this.getRef(`${parentCollection}/${parentId}/${subCollection}`).set(
+      data,
+    );
+  }
 }

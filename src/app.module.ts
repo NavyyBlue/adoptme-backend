@@ -9,6 +9,7 @@ import { R2Module } from './modules/r2/r2.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
 import { UserModule } from './modules/user/user.module';
 import { VetsModule } from './modules/vets/vets.module';
+import { PreferencesModule } from './modules/preferences/preferences.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { VetsModule } from './modules/vets/vets.module';
     ReviewsModule,
     PetsModule,
     UserModule,
+    PreferencesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
