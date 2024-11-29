@@ -38,6 +38,9 @@ export class PetResponseDto {
   @ApiProperty()
   petId: string;
 
+  @ApiProperty()
+  reportingUserId: string;
+
   static fromEntity(pet: Pet): PetResponseDto {
     const dto = new PetResponseDto();
     dto.name = pet.name;
@@ -52,6 +55,7 @@ export class PetResponseDto {
     dto.color = pet.color;
     dto.imageUrl = pet.imageUrl;
     dto.petId = pet.petId;
+    dto.reportingUserId = pet.reportingUserId;
     return dto;
   }
 }

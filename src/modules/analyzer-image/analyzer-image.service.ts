@@ -69,12 +69,11 @@ export class AnalyzerImageService {
 
     if (compareResponse.status === 400) {
         await this.r2Service.deleteFile(filename);
-        throw new HttpException(compareResponse.message, HttpStatus.BAD_REQUEST);
     } else if (compareResponse.status === 422) {
         await this.r2Service.deleteFile(filename);
-        throw new HttpException('Unprocessable Entity: Unable to process the image comparison', HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    console.log('compareResponse', compareResponse);
     const comparePetsResponseDto: ComparePetsResponseDto = {
         status: compareResponse.status,
         message: compareResponse.message,
