@@ -1,5 +1,5 @@
 import { Auth } from '@guards/auth.decorator';
-import { Body, Controller, Delete, Get, Post, Put, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -26,6 +26,13 @@ export class UserController {
   @ApiResponse({ status: 200, type: UserProfileDto })
   async getUserProfile(@Req() req) {
     const userId = req.user.uid;
+    return this.userService.getUserProfile(userId);
+  }
+
+  @Get(':userId')
+  @ApiOperation({ summary: 'Get user data' })
+  @ApiResponse({ status: 200, type: UserProfileDto })
+  async getUserData(@Param('userId') userId: string) {
     return this.userService.getUserProfile(userId);
   }
 

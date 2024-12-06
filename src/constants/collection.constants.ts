@@ -5,4 +5,5 @@ export const COLLECTIONS = {
   MISSING_PETS: 'missing_pets',
   PREFERENCES: 'pet_preferences',
   USER_PROFILE: 'user-profile',
+  ADOPTION_FORMS: 'adoption_forms',
 };

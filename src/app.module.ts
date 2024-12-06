@@ -10,6 +10,7 @@ import { ReviewsModule } from './modules/reviews/reviews.module';
 import { UserModule } from './modules/user/user.module';
 import { VetsModule } from './modules/vets/vets.module';
 import { PreferencesModule } from './modules/preferences/preferences.module';
+import { AdoptionsFormModule } from './modules/adoptions-form/adoptions-form.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { PreferencesModule } from './modules/preferences/preferences.module';
     PetsModule,
     UserModule,
     PreferencesModule,
+    AdoptionsFormModule,
   ],
   controllers: [AppController],
   providers: [AppService],

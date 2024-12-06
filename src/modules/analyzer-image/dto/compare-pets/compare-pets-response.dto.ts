@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsEmpty, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class ComparePetsResponseDto {
   @ApiProperty({
@@ -17,4 +17,12 @@ export class ComparePetsResponseDto {
   @IsNotEmpty()
   @IsString()
   readonly message: string;
+
+  @ApiProperty({
+    description: 'Image url',
+    example: 'https://example.com/image.jpg',
+  })
+  @IsEmpty()
+  readonly imageUrl?: string;
+
 }

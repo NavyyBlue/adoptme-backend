@@ -77,6 +77,7 @@ export class AnalyzerImageService {
     const comparePetsResponseDto: ComparePetsResponseDto = {
         status: compareResponse.status,
         message: compareResponse.message,
+        imageUrl: uploadResponse.imageUrl,
     };
     
     return comparePetsResponseDto;
