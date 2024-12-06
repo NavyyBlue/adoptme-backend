@@ -29,6 +29,7 @@ export class PetsService {
   async getAllPets(
     isMissing: boolean | string,
     userId: string,
+    filters: { breed?: string, weight?: string, size?: string, age?: string, color?: string, species?: string }
   ): Promise<Pet[]> {
     const profile = await this.userProfileService.getUserProfile(userId);
     const petPreferences = profile.petPreferences;
@@ -39,10 +40,32 @@ export class PetsService {
     const pets = await this.firebaseRepository.getAll(collection);
     const petsArray = Object.values(pets);
 
-    if (petPreferences) {
+    let filteredPets = petsArray;
+
+    if (filters.breed || filters.species) {
+      filteredPets = petsArray.filter(pet => {
+        const matchesBreed = filters.breed ? pet.breed === filters.breed : true;
+        const matchesSpecies = filters.species ? pet.species === filters.species : true;
+
+        return matchesBreed && matchesSpecies;
+      });
+    }
+
+    if (filters.weight || filters.size || filters.age || filters.color) {
+      filteredPets = filteredPets.filter(pet => {
+        const matchesWeight = filters.weight ? pet.weight === filters.weight : false;
+        const matchesSize = filters.size ? pet.size === filters.size : false;
+        const matchesAge = filters.age ? pet.age === filters.age : false;
+        const matchesColor = filters.color ? pet.color === filters.color : false;
+
+        return matchesWeight || matchesSize || matchesAge || matchesColor;
+      });
+    }
+
+    if (!filters.breed && !filters.species && !filters.weight && !filters.size && !filters.age && !filters.color && petPreferences) {
       const { petType, age, color } = petPreferences;
 
-      petsArray.sort((a, b) => {
+      filteredPets.sort((a, b) => {
         let scoreA = 0;
         let scoreB = 0;
 
@@ -68,8 +91,8 @@ export class PetsService {
       });
     }
 
-    return petsArray;
-  }
+    return filteredPets;
+  }
 
   async getPetById(id: string, isMissing: boolean | string): Promise<Pet> {
     const isMissingBoolean = isMissing === true || isMissing === 'true';

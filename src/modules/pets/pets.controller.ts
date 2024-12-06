@@ -27,18 +27,31 @@ export class PetsController {
   @Get("all")
   @ApiOperation({ summary: 'Get all pets' })
   @ApiQuery({ name: 'isMissing', required: true, type: Boolean, description: 'Indicates if the pets are missing' })
+  @ApiQuery({ name: 'breed', required: false, type: String, description: 'Breed of the pet' })
+  @ApiQuery({ name: 'weight', required: false, type: String, description: 'Weight of the pet' })
+  @ApiQuery({ name: 'size', required: false, type: String, description: 'Size of the pet' })
+  @ApiQuery({ name: 'age', required: false, type: String, description: 'Age of the pet' })
+  @ApiQuery({ name: 'color', required: false, type: String, description: 'Color of the pet' })
+  @ApiQuery({ name: 'species', required: false, type: String, description: 'Species of the pet' })
   @Auth()
   async getAllPets(
     @Req() req,
-    @Query('isMissing') isMissing: boolean | string
+    @Query('isMissing') isMissing: boolean | string,
+    @Query('breed') breed?: string,
+    @Query('weight') weight?: string,
+    @Query('size') size?: string,
+    @Query('age') age?: string,
+    @Query('color') color?: string,
+    @Query('species') species?: string
   ): Promise<{ data: PetResponseDto[] }> {
     const userId = req.user.uid;
 
-    const pets = await this.petsService.getAllPets(isMissing, userId);
+    const filters = { breed, weight, size, age, color, species };
+    const pets = await this.petsService.getAllPets(isMissing, userId, filters);
     const petResponseDtos = pets.map(pet => PetResponseDto.fromEntity(pet));
     return { data: petResponseDtos };
   }
-
+  
   @Get(':id')
   @ApiOperation({ summary: 'Get a pet by ID' })
   @ApiParam({ name: 'id', required: true, description: 'The ID of the pet' })
