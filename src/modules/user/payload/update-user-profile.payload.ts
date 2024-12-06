@@ -19,4 +19,7 @@ export class UpdateUserProfilePayload {
 
   @ApiProperty()
   career?: string;
+
+  @ApiProperty()
+  photoUrl?: string;
 }

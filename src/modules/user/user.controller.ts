@@ -11,6 +11,8 @@ import { UserProfileDto } from './dto/user-profile.dto';
 import { CreateUserProfilePayload } from './payload/create-user-profile.payload';
 import { UpdateUserProfilePayload } from './payload/update-user-profile.payload';
 import { UserService } from './user.service';
+import { StudentCodePayload } from './payload/student-code.payload';
+import { StudentEmailPayload } from './payload/student-email.payload';
 
 @ApiBearerAuth()
 @ApiTags('user')
@@ -52,5 +54,18 @@ export class UserController {
   async deleteUserProfile(@Req() req) {
     const userId = req.user.uid;
     return this.userService.deleteUserProfile(userId);
+  }
+
+  @Post('verify-code')
+  @Auth()
+  @ApiOperation({ summary: 'Get student data by code' })
+  async studenDataByCode(@Body() student: StudentCodePayload) {
+    return await this.userService.studentDataByCode(student.code);
+  }
+
+  @Post('/verify-email')  
+  @ApiOperation({ summary: 'Get student data by email' })
+  async validateStudentEmail(@Body() student: StudentEmailPayload) {
+    return await this.userService.validateStudentEmail(student.email);
   }
 }

@@ -42,6 +42,9 @@ export class UserProfile {
   @ApiProperty()
   career?: string;
 
+  @ApiProperty()
+  photoUrl?: string;
+
   constructor(partial: Partial<UserProfile>) {
     Object.assign(this, partial);
   }
