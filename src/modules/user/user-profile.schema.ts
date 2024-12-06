@@ -11,16 +11,16 @@ class WeightRange {
 
 export class PetPreference {
   @ApiProperty()
-  petType: PetType;
+  petType: PetType[];
 
   @ApiProperty()
   size: WeightRange;
 
   @ApiProperty()
-  age: PetAge;
+  age: PetAge[];
 
   @ApiProperty()
-  color: PetColor;
+  color: PetColor[];
 }
 
 export class UserProfile {

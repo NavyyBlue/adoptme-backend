@@ -1,11 +1,13 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, Query, NotFoundException } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiQuery, ApiBody, ApiParam } from '@nestjs/swagger';
+import { Controller, Get, Post, Put, Delete, Param, Body, Query, NotFoundException, Req } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiQuery, ApiBody, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { PetsService } from './pets.service';
 import { Pet } from './pet.schema';
 import { CreatePetDto } from './dto/create-pet.dto';
 import { Part } from 'aws-sdk/clients/s3';
 import { PetResponseDto } from './dto/pet-response.dto';
+import { Auth } from '@guards/auth.decorator';
 
+@ApiBearerAuth()
 @ApiTags('pets')
 @Controller('pets')
 export class PetsController {
@@ -25,10 +27,14 @@ export class PetsController {
   @Get("all")
   @ApiOperation({ summary: 'Get all pets' })
   @ApiQuery({ name: 'isMissing', required: true, type: Boolean, description: 'Indicates if the pets are missing' })
+  @Auth()
   async getAllPets(
+    @Req() req,
     @Query('isMissing') isMissing: boolean | string
   ): Promise<{ data: PetResponseDto[] }> {
-    const pets = await this.petsService.getAllPets(isMissing);
+    const userId = req.user.uid;
+
+    const pets = await this.petsService.getAllPets(isMissing, userId);
     const petResponseDtos = pets.map(pet => PetResponseDto.fromEntity(pet));
     return { data: petResponseDtos };
   }

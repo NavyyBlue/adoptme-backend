@@ -31,7 +31,7 @@ export class PreferencesController {
  
   @Put()
   async updatePreferences(
-    preferencesData: Partial<PreferencesRequestDto>,
+    @Body() preferencesData: Partial<PreferencesRequestDto>,
     @Req() req,
   ) {
     const userId = req.user.uid;
